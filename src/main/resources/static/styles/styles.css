@@ -1,0 +1,11 @@
+.grid {
+    display: flex;
+}
+
+.ingredient-group {
+    padding: 5px;
+}
+
+.validationError {
+    color: red;
+}
