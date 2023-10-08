@@ -35,7 +35,7 @@ public class DesignShavermaController {
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
-        List<Ingredient> ingredients = ingredientRepo.findAll();
+        Iterable<Ingredient> ingredients = ingredientRepo.findAll();
         Ingredient.Type[] types = Ingredient.Type.values();
         for (Ingredient.Type type : types) {
             model.addAttribute(type.toString().toLowerCase(),
@@ -71,8 +71,8 @@ public class DesignShavermaController {
     }
 
     private Iterable<Ingredient> filterByType(
-            List<Ingredient> ingredients, Ingredient.Type type) {
-        return ingredients
+            Iterable<Ingredient> ingredients, Ingredient.Type type) {
+        return ((List<Ingredient>) ingredients)
                 .stream()
                 .filter(x -> x.getType().equals(type))
                 .collect(Collectors.toList());

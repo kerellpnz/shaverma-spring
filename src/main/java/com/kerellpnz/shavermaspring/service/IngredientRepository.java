@@ -1,14 +1,7 @@
 package com.kerellpnz.shavermaspring.service;
 
 import com.kerellpnz.shavermaspring.domain.Ingredient;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface IngredientRepository {
-    List<Ingredient> findAll();
-
-    Optional<Ingredient> findById(String id);
-
-    Ingredient save(Ingredient ingredient);
+public interface IngredientRepository extends CrudRepository<Ingredient, String> {
 }

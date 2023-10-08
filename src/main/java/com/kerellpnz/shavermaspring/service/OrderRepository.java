@@ -1,8 +1,19 @@
 package com.kerellpnz.shavermaspring.service;
 
 import com.kerellpnz.shavermaspring.domain.ShavermaOrder;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
-public interface OrderRepository {
+import java.util.Date;
+import java.util.List;
 
-    ShavermaOrder save(ShavermaOrder order);
+public interface OrderRepository extends CrudRepository<ShavermaOrder, Long> {
+
+    List<ShavermaOrder> findByDeliveryZip(String deliveryZip);
+
+    List<ShavermaOrder> readOrdersByDeliveryZipAndPlacedAtBetween(
+            String deliveryZip, Date startDate, Date endDate);
+
+    @Query("select o from ShavermaOrder o where o.deliveryCity='Seattle'")
+    List<ShavermaOrder> readOrdersDeliveredInSeattle();
 }
