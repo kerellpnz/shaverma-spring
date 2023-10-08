@@ -6,11 +6,17 @@ import org.hibernate.validator.constraints.CreditCardNumber;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
-public class ShavermaOrder {
+public class ShavermaOrder implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Long id;
     @NotBlank
     private String deliveryName;
     @NotBlank
@@ -28,6 +34,8 @@ public class ShavermaOrder {
     private String ccExpiration;
     @Digits(integer=3, fraction=0, message="Invalid CVV")
     private String ccCVV;
+    private Date placedAt;
+
     private List<Shaverma> shavermas = new ArrayList<>();
 
     public void addShaverma(Shaverma shaverma) {

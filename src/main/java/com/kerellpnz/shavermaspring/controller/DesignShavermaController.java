@@ -3,7 +3,9 @@ package com.kerellpnz.shavermaspring.controller;
 import com.kerellpnz.shavermaspring.domain.Ingredient;
 import com.kerellpnz.shavermaspring.domain.Shaverma;
 import com.kerellpnz.shavermaspring.domain.ShavermaOrder;
+import com.kerellpnz.shavermaspring.service.IngredientRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,20 +25,17 @@ import java.util.stream.Collectors;
 @SessionAttributes("shavermaOrder")
 public class DesignShavermaController {
 
+    private final IngredientRepository ingredientRepo;
+
+    @Autowired
+    public DesignShavermaController(
+            IngredientRepository ingredientRepo) {
+        this.ingredientRepo = ingredientRepo;
+    }
+
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("SLVH", "Standard lavash", Ingredient.Type.WRAP),
-                new Ingredient("CLVH", "Cheese lavash", Ingredient.Type.WRAP),
-                new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-                new Ingredient("CHKN", "Chicken", Ingredient.Type.PROTEIN),
-                new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-                new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-                new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-                new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-                new Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
-                new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE)
-        );
+        List<Ingredient> ingredients = ingredientRepo.findAll();
         Ingredient.Type[] types = Ingredient.Type.values();
         for (Ingredient.Type type : types) {
             model.addAttribute(type.toString().toLowerCase(),
@@ -62,7 +60,7 @@ public class DesignShavermaController {
 
     @PostMapping
     public String processShaverma(@Valid Shaverma shaverma, Errors errors,
-                              @ModelAttribute ShavermaOrder shavermaOrder) {
+                                  @ModelAttribute ShavermaOrder shavermaOrder) {
         if (errors.hasErrors()) {
             return "design";
         }
