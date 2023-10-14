@@ -1,13 +1,13 @@
 package com.kerellpnz.shavermaspring.domain;
 
+import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.kerellpnz.shavermaspring.domain.cassandra.ShavermaUDRUtils;
+import com.kerellpnz.shavermaspring.domain.cassandra.ShavermaUDT;
 import lombok.Data;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -15,16 +15,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Data
-@Entity
+@Table("orders")
 public class ShavermaOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @PrimaryKey
+    private UUID id = Uuids.timeBased();
     @NotBlank
     private String deliveryName;
     @NotBlank
@@ -44,10 +44,10 @@ public class ShavermaOrder implements Serializable {
     private String ccCVV;
     private Date placedAt;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Shaverma> shavermas = new ArrayList<>();
+    @Column("shavermas")
+    private List<ShavermaUDT> shavermas = new ArrayList<>();
 
     public void addShaverma(Shaverma shaverma) {
-        this.shavermas.add(shaverma);
+        this.shavermas.add(ShavermaUDRUtils.toShavermaUDT(shaverma));
     }
 }
