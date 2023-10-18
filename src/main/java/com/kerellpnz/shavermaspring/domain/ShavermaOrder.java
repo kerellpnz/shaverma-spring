@@ -1,12 +1,8 @@
 package com.kerellpnz.shavermaspring.domain;
 
-import com.datastax.oss.driver.api.core.uuid.Uuids;
-import com.kerellpnz.shavermaspring.domain.cassandra.ShavermaUDRUtils;
-import com.kerellpnz.shavermaspring.domain.cassandra.ShavermaUDT;
 import lombok.Data;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
@@ -15,16 +11,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Data
-@Table("orders")
+@Document
 public class ShavermaOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @PrimaryKey
-    private UUID id = Uuids.timeBased();
+    @Id
+    private String id;
     @NotBlank
     private String deliveryName;
     @NotBlank
@@ -44,10 +39,9 @@ public class ShavermaOrder implements Serializable {
     private String ccCVV;
     private Date placedAt;
 
-    @Column("shavermas")
-    private List<ShavermaUDT> shavermas = new ArrayList<>();
+    private List<Shaverma> shavermas = new ArrayList<>();
 
     public void addShaverma(Shaverma shaverma) {
-        this.shavermas.add(ShavermaUDRUtils.toShavermaUDT(shaverma));
+        this.shavermas.add(shaverma);
     }
 }
